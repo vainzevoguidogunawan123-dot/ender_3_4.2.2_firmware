@@ -1,17 +1,19 @@
 name: marlin_auto_build
 
 on:
-  workflow_dispatch:
+  push:
+    paths:
+      - 'builds/**'
+  schedule:
+    - cron:  '30 3 * * *'
 
 jobs:
   create_builds:
-    runs-on: ubuntu-latest
-
+    runs-on: ubuntu-latest 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Python
+    - uses: zisismaras/marlin_auto_build@master
+    
+    - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.x"
