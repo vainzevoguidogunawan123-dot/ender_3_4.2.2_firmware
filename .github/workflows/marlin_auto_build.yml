@@ -1,20 +1,17 @@
-name: marlin_auto_build
+name: Build Marlin Firmware
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - 'builds/**'
-  schedule:
-    - cron: '30 3 * * *'
 
 jobs:
-  create_builds:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: zisismaras/marlin_auto_build@master
-    
-    - name: Set up Python
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.x"
@@ -23,12 +20,12 @@ jobs:
         run: |
           pip install platformio
 
-      - name: Build Marlin firmware
+      - name: Build Marlin
         run: |
-          platformio run -e STM32F103RET6_creality
+          platformio run
 
       - name: Upload firmware artifact
         uses: actions/upload-artifact@v3
         with:
           name: firmware
-          path: .pio/build/STM32F103RET6_creality/firmware.bin
+          path: .pio/build/*/firmware.bin
